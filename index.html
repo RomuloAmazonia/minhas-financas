@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Finanças</title>
+    <style>
+/* Apple-inspired minimal, elegant and modern UI */
+:root {
+  --primary: #0071e3;
+  --primary-dark: #005bb5;
+  --accent: #34c759;
+  --danger: #ff3b30;
+  --warning: #ff9500;
+  --info: #5ac8fa;
+  --text: #1d1d1f;
+  --muted: #6e6e73;
+  --bg: #f5f5f7;
+  --white: #fff;
+  --radius: 18px;
+  --radius-sm: 10px;
+  --shadow: 0 6px 32px 0 rgba(0,0,0,0.10);
+  --shadow-light: 0 2px 8px 0 rgba(0,0,0,0.05);
+  --input-bg: #f2f2f7;
+  --input-border: #e5e5ea;
+  --table-header: #f4f4f6;
+  --table-row-alt: #fafafc;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: -.01em;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+header {
+  background: var(--white);
+  color: var(--primary);
+  padding: 2.5rem 1rem 1.5rem 1rem;
+  text-align: center;
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+
+.container {
+  max-width: 1040px;
+  margin: 2.5rem auto 2rem auto;
+  padding: 0 1.5rem;
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-bottom: 2.2rem;
+}
+
+button,
+.page-btn {
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 1.02rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.03);
+  transition: background 0.18s, box-shadow 0.18s, transform 0.11s;
+  outline: none;
+}
+
+  .action-buttons button {
+    background: transparent;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    border-radius: 10px;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .action-buttons button:hover {
+    background: #0071e3;
+    color: white;
+  }
+
+  .action-buttons button:first-child {
+    background: #0071e3;
+    color: white;
+  }
+
+  .action-buttons button:first-child:hover {
+    background: #005bb5;
+  }
+
+button:hover, .page-btn:hover {
+  background: var(--primary-dark);
+  box-shadow: 0 4px 16px 0 rgba(0,0,0,0.09);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.summary-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2.2rem 2.8rem;
+  margin-bottom: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+
+.balance {
+  font-size: 2.3rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.03em;
+}
+
+.summary-card h2 {
+  color: var(--muted);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.1rem;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 2.2rem;
+}
+
+.category-card {
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-light);
+  padding: 1.3rem 1.1rem 1.1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  border: 1px solid #ececec;
+  transition: transform 0.18s cubic-bezier(.4,2,.6,.8), box-shadow 0.18s, border 0.18s;
+}
+
+.category-card:hover {
+  transform: translateY(-2px) scale(1.018);
+  box-shadow: 0 8px 28px 0 rgba(0,113,227,0.08);
+  border-color: var(--primary);
+}
+
+.category-icon {
+  font-size: 2.3rem;
+  margin-bottom: 0.2rem;
+  text-align: center;
+}
+
+.category-title {
+  font-weight: 600;
+  font-size: 1.13rem;
+  margin-bottom: 0.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text);
+}
+
+.category-budget,
+.category-remaining,
+.category-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.01rem;
+}
+
+.category-total {
+  margin-top: 0.6rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid #f0f4fa;
+  font-size: 0.97rem;
+}
+
+.positive {
+  color: var(--accent);
+  font-weight: 600;
+}
+.negative {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 1.7rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.month-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.month-selector button {
+  padding: 0.38rem 1rem;
+  font-size: 1.15rem;
+  border-radius: 7px;
+  background: var(--input-bg);
+  color: var(--primary);
+  font-weight: 600;
+  box-shadow: none;
+  border: none;
+  transition: background 0.15s, color 0.15s;
+}
+.month-selector button:hover {
+  background: var(--primary);
+  color: var(--white);
+}
+
+#current-month {
+  font-size: 1.07rem;
+  color: var(--text);
+  font-weight: 500;
+  min-width: 115px;
+  display: inline-block;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-light);
+}
+
+th, td {
+  padding: 0.82rem 0.8rem;
+  text-align: left;
+  font-size: 1.01rem;
+}
+
+th {
+  background: var(--table-header);
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 2px solid #ececec;
+  letter-spacing: -.01em;
+}
+
+tbody tr:nth-child(even) {
+  background: var(--table-row-alt);
+}
+
+tbody tr:hover {
+  background: #eaf6ff;
+  transition: background 0.13s;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.1rem;
+  gap: 0.5rem;
+}
+
+.page-btn {
+  background: var(--input-bg);
+  color: var(--primary);
+  font-weight: 500;
+  border: none;
+  border-radius: 7px;
+  padding: 0.44rem 0.95rem;
+  transition: background 0.14s, color 0.14s;
+  box-shadow: none;
+}
+.page-btn.active, .page-btn:active {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.38);
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+}
+
+.modal-content {
+  background: var(--white);
+  margin: 4rem auto;
+  padding: 2.4rem 2.1rem 1.7rem 2.1rem;
+  border-radius: var(--radius);
+  min-width: 320px;
+  max-width: 520px;
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.13);
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.5rem;
+  font-size: 1.7rem;
+  cursor: pointer;
+  color: #bbb;
+  transition: color 0.13s;
+  user-select: none;
+}
+.close:hover {
+  color: var(--danger);
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.tab {
+  padding: 0.55rem 1.2rem;
+  cursor: pointer;
+  border-bottom: 2.5px solid transparent;
+  font-weight: 500;
+  color: #888;
+  background: none;
+  transition: color 0.15s, border 0.15s;
+}
+.tab.active {
+  border-bottom: 2.5px solid var(--primary);
+  color: var(--primary);
+  background: #f2f8fe;
+  border-radius: 8px 8px 0 0;
+}
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+input, select {
+  padding: 0.7rem 0.95rem;
+  border-radius: 7px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  font-size: 1rem;
+  transition: border 0.13s, background 0.13s;
+}
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #eaf6ff;
+}
+
+.csv-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin-bottom: 1.1rem;
+}
+
+.chart-container {
+  margin-top: 2rem;
+  height: 370px;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+  padding: 1rem;
+}
+
+/* Small details for Apple feel */
+h1, h2, h3 {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+h1 {
+  font-size: 2.1rem;
+  color: var(--primary);
+}
+h2 {
+  font-size: 1.33rem;
+  color: var(--muted);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: #e5e5ea;
+  border-radius: 7px;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d1d6;
+  border-radius: 7px;
+}
+
+@media (max-width: 700px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+  .summary-card {
+    padding: 1.2rem 0.7rem;
+  }
+  .category-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .modal-content {
+    padding: 1.1rem 0.7rem;
+    min-width: 0;
+  }
+  .chart-container {
+    padding: 0.3rem;
+  }
+  th, td {
+    padding: 0.7rem 0.3rem;
+  }
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Minhas Finanças</h1>
+    </header>
+    
+    <div class="container">
+        <div class="action-buttons">
+            <button id="add-transaction-btn">Adicionar Transação</button>
+            <button id="import-csv-btn">Importar CSV</button>
+            <button id="add-category-btn">Gerenciar Categorias</button>
+            <button id="export-data-btn">Exportar Dados</button>
+            <button id="import-data-btn">Importar Dados</button>
+            <input type="file" id="import-data-input" accept=".json" style="display: none;">
+        </div>
+
+        </div>
+        
+        
+        <div class="filter-bar">
+            <div class="month-selector">
+                <button id="prev-month">&lt;</button>
+                <span id="current-month">Abril 2025</span>
+                <button id="next-month">&gt;</button>
+            </div>
+            <button id="show-charts-btn">Ver Gráficos</button>
+        </div>
+        
+        <div class="summary-card">
+            <h2>Saldo Atual</h2>
+            <div class="balance" id="current-balance">R$ 3.382,39</div>
+            <div>
+                <div>Total de Receitas: <span id="total-income">R$ 5.000,00</span></div>
+                <div>Total de Despesas: <span id="total-expenses">R$ 1.617,61</span></div>
+            </div>
+        </div>
+        
+        <h2>Categorias</h2>
+        <div class="category-grid" id="categories-container">
+            <!-- Categorias serão inseridas aqui via JavaScript -->
+        </div>
+        
+        <div class="summary-card">
+            <h2>Transações Recentes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Categoria</th>
+                        <th>Valor</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="transactions-table">
+                    <!-- Transações serão inseridas aqui via JavaScript -->
+                </tbody>
+            </table>
+            <div class="pagination" id="pagination">
+                <!-- Paginação será inserida aqui via JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para adicionar transação -->
+    <div id="transaction-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Adicionar Transação</h2>
+            <form id="transaction-form">
+                <input type="date" id="transaction-date" required>
+                <input type="text" id="transaction-description" placeholder="Descrição" required>
+                <select id="transaction-category" required>
+                    <!-- Categorias serão inseridas aqui via JavaScript -->
+                </select>
+                <input type="number" id="transaction-amount" placeholder="Valor" step="0.01" required>
+                <button type="submit">Salvar</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal para importar CSV -->
+    <div id="csv-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Importar Extrato em CSV</h2>
+            <div class="csv-upload">
+                <input type="file" id="csv-file" accept=".csv">
+                <div>
+                    <h3>Mapeamento de Colunas</h3>
+                    <div id="column-mapping">
+                        <!-- Opções de mapeamento serão inseridas aqui via JavaScript -->
+                    </div>
+                </div>
+                <button id="process-csv">Processar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para gerenciar categorias -->
+    <div id="category-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Gerenciar Categorias</h2>
+            <div class="tabs">
+                <div class="tab active" data-tab="add-category">Adicionar</div>
+                <div class="tab" data-tab="edit-categories">Editar</div>
+            </div>
+            <div class="tab-content active" id="add-category">
+                <form id="category-form">
+                    <input type="text" id="category-name" placeholder="Nome da Categoria" required>
+                    <input type="text" id="category-icon" placeholder="Emoji (Ex: 🏠, 🚗, 💊)" required>
+                    <input type="number" id="category-budget" placeholder="Orçamento Mensal" step="0.01" required>
+                    <button type="submit">Adicionar Categoria</button>
+                </form>
+            </div>
+            <div class="tab-content" id="edit-categories">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ícone</th>
+                            <th>Nome</th>
+                            <th>Orçamento</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categories-table">
+                        <!-- Categorias serão inseridas aqui via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para visualizar gráficos -->
+    <div id="charts-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Análise Financeira</h2>
+            <div class="tabs">
+                <div class="tab active" data-tab="monthly-chart">Mensal</div>
+                <div class="tab" data-tab="category-chart">Categorias</div>
+                <div class="tab" data-tab="trend-chart">Tendências</div>
+            </div>
+            <div class="tab-content active" id="monthly-chart">
+                <div class="chart-container" id="monthly-chart-container">
+                    <!-- Canvas para o gráfico será inserido aqui via JavaScript -->
+                </div>
+            </div>
+            <div class="tab-content" id="category-chart">
+                <div class="chart-container" id="category-chart-container">
+                    <!-- Canvas para o gráfico será inserido aqui via JavaScript -->
+                </div>
+            </div>
+            <div class="tab-content" id="trend-chart">
+                <div class="chart-container" id="trend-chart-container">
+                    <!-- Canvas para o gráfico será inserido aqui via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        // Dados de exemplo para demonstração
+        let currentMonth = new Date();
+        let categories = [
+            { id: 1, name: "Transporte", icon: "🚗", budget: 200.00, spent: 590.90, remaining: -390.90 },
+            { id: 2, name: "Saúde", icon: "💊", budget: 610.00, spent: 838.01, remaining: -228.01 },
+            { id: 3, name: "Habitacional", icon: "🏠", budget: 1400.00, spent: 1953.79, remaining: -553.79 },
+            { id: 4, name: "Pão", icon: "🍞", budget: 120.00, spent: 37.04, remaining: 82.96 },
+            { id: 5, name: "Feira", icon: "🍌", budget: 140.00, spent: 412.76, remaining: -272.76 },
+            { id: 6, name: "Profissional", icon: "💻", budget: 464.00, spent: 0.00, remaining: 464.00 }
+        ];
+        
+        let transactions = [
+            { id: 1, date: "2025-04-10", description: "Combustível", category: 1, amount: -150.00 },
+            { id: 2, date: "2025-04-05", description: "Mercado", category: 5, amount: -312.50 },
+            { id: 3, date: "2025-04-01", description: "Aluguel", category: 3, amount: -1500.00 },
+            { id: 4, date: "2025-04-03", description: "Farmácia", category: 2, amount: -75.30 },
+            { id: 5, date: "2025-04-15", description: "Salário", category: 0, amount: 5000.00 },
+            { id: 6, date: "2025-04-18", description: "Consulta Médica", category: 2, amount: -220.00 },
+            { id: 7, date: "2025-04-20", description: "Uber", category: 1, amount: -45.90 },
+            { id: 8, date: "2025-04-22", description: "Pão", category: 4, amount: -15.00 },
+            { id: 9, date: "2025-04-25", description: "Serviços", category: 3, amount: -280.00 },
+            { id: 10, date: "2025-04-27", description: "Feira", category: 5, amount: -100.26 }
+        ];
+        
+        // Função para carregar e exibir as categorias
+        function loadCategories() {
+            const container = document.getElementById('categories-container');
+            container.innerHTML = '';
+            
+            categories.forEach(category => {
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                
+                const remainingClass = category.remaining < 0 ? 'negative' : 'positive';
+                
+                card.innerHTML = `
+                    <div class="category-icon">${category.icon}</div>
+                    <div class="category-title">${category.icon} ${category.name}</div>
+                    <div class="category-budget">
+                        <span>Orçamento mensal:</span>
+                        <span>R$ ${category.budget.toFixed(2)}</span>
+                    </div>
+                    <div class="category-remaining">
+                        <span>Restante:</span>
+                        <span class="${remainingClass}">R$ ${category.remaining.toFixed(2)}</span>
+                    </div>
+                    <div class="category-total">
+                        <span>Gasto Total:</span>
+                        <span>R$ ${category.spent.toFixed(2)}</span>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Função para carregar as transações na tabela
+        function loadTransactions() {
+            const tableBody = document.getElementById('transactions-table');
+            tableBody.innerHTML = '';
+            
+            transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            transactions.forEach(transaction => {
+                const row = document.createElement('tr');
+                
+                const category = transaction.category === 0 ? 
+                    { name: "Receita", icon: "💰" } : 
+                    categories.find(c => c.id === transaction.category);
+                
+                const amountClass = transaction.amount < 0 ? 'negative' : 'positive';
+                
+                row.innerHTML = `
+                    <td>${formatDate(transaction.date)}</td>
+                    <td>${transaction.description}</td>
+                    <td>${category ? category.icon + ' ' + category.name : 'N/A'}</td>
+                    <td class="${amountClass}">R$ ${Math.abs(transaction.amount).toFixed(2)}</td>
+                    <td>
+                        <button onclick="editTransaction(${transaction.id})" style="background-color: #3b82f6; padding: 5px 8px;">Editar</button>
+                        <button onclick="deleteTransaction(${transaction.id})" style="background-color: #ef4444; padding: 5px 8px;">Excluir</button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Função para atualizar o saldo
+        function updateBalance() {
+            const balance = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
+            const income = transactions.filter(t => t.amount > 0).reduce((sum, t) => sum + t.amount, 0);
+            const expenses = Math.abs(transactions.filter(t => t.amount < 0).reduce((sum, t) => sum + t.amount, 0));
+            
+            document.getElementById('current-balance').textContent = `R$ ${balance.toFixed(2)}`;
+            document.getElementById('total-income').textContent = `R$ ${income.toFixed(2)}`;
+            document.getElementById('total-expenses').textContent = `R$ ${expenses.toFixed(2)}`;
+        }
+        
+        // Formatação de data
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+        
+        // Função para mostrar o mês atual
+        function updateCurrentMonth() {
+            const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+                           'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            
+            const month = months[currentMonth.getMonth()];
+            const year = currentMonth.getFullYear();
+            
+            document.getElementById('current-month').textContent = `${month} ${year}`;
+        }
+        
+        // Navegação de mês
+        document.getElementById('prev-month').addEventListener('click', function() {
+            currentMonth.setMonth(currentMonth.getMonth() - 1);
+            updateCurrentMonth();
+            // Aqui você carregaria os dados do mês anterior do banco de dados
+        });
+        
+        document.getElementById('next-month').addEventListener('click', function() {
+            currentMonth.setMonth(currentMonth.getMonth() + 1);
+            updateCurrentMonth();
+            // Aqui você carregaria os dados do próximo mês do banco de dados
+        });
+        
+        // Modal para adicionar transação
+        const transactionModal = document.getElementById('transaction-modal');
+        const addTransactionBtn = document.getElementById('add-transaction-btn');
+        
+        addTransactionBtn.addEventListener('click', function() {
+            // Preencher o dropdown de categorias
+            const categorySelect = document.getElementById('transaction-category');
+            categorySelect.innerHTML = '<option value="0">Receita 💰</option>';
+            
+            categories.forEach(category => {
+                categorySelect.innerHTML += `<option value="${category.id}">${category.icon} ${category.name}</option>`;
+            });
+            
+            // Definir a data atual no formulário
+            document.getElementById('transaction-date').valueAsDate = new Date();
+            
+            transactionModal.style.display = 'block';
+        });
+        
+        // Modal para importar CSV
+        const csvModal = document.getElementById('csv-modal');
+        const importCsvBtn = document.getElementById('import-csv-btn');
+        
+        importCsvBtn.addEventListener('click', function() {
+            csvModal.style.display = 'block';
+        });
+        
+        // Modal para gerenciar categorias
+        const categoryModal = document.getElementById('category-modal');
+        const addCategoryBtn = document.getElementById('add-category-btn');
+        
+        addCategoryBtn.addEventListener('click', function() {
+            // Preencher a tabela de categorias
+            const categoriesTable = document.getElementById('categories-table');
+            categoriesTable.innerHTML = '';
+            
+            categories.forEach(category => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${category.icon}</td>
+                    <td>${category.name}</td>
+                    <td>R$ ${category.budget.toFixed(2)}</td>
+                    <td>
+                        <button onclick="editCategory(${category.id})" style="background-color: #3b82f6; padding: 5px 8px;">Editar</button>
+                        <button onclick="deleteCategory(${category.id})" style="background-color: #ef4444; padding: 5px 8px;">Excluir</button>
+                    </td>
+                `;
+                
+                categoriesTable.appendChild(row);
+            });
+            
+            categoryModal.style.display = 'block';
+        });
+        
+        // Modal para visualizar gráficos
+        const chartsModal = document.getElementById('charts-modal');
+        const showChartsBtn = document.getElementById('show-charts-btn');
+        
+        showChartsBtn.addEventListener('click', function() {
+            createMonthlyChart();
+            createCategoryChart();
+            createTrendChart();
+            chartsModal.style.display = 'block';
+        });
+        
+        // Fechar modais
+        document.querySelectorAll('.close').forEach(closeBtn => {
+            closeBtn.addEventListener('click', function() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            });
+        });
+        
+        // Fechar modais ao clicar fora deles
+        window.addEventListener('click', function(event) {
+            document.querySelectorAll('.modal').forEach(modal => {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+        
+        // Alternar entre abas
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remover classe ativa de todas as abas
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Adicionar classe ativa à aba clicada
+                this.classList.add('active');
+                
+                // Mostrar o conteúdo correspondente
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Enviar formulário de transação
+        document.getElementById('transaction-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const date = document.getElementById('transaction-date').value;
+            const description = document.getElementById('transaction-description').value;
+            const categoryId = parseInt(document.getElementById('transaction-category').value);
+            let amount = parseFloat(document.getElementById('transaction-amount').value);
+            
+            // Converter para negativo se for despesa
+            if (categoryId !== 0 && amount > 0) {
+                amount = -amount;
+            }
+            
+            // Adicionar nova transação
+            const newTransaction = {
+                id: transactions.length + 1,
+                date,
+                description,
+                category: categoryId,
+                amount
+            };
+            
+            transactions.push(newTransaction);
+            
+            // Atualizar dados
+updateCategorySpending();
+loadTransactions();
+loadCategories();
+updateBalance();
+saveToLocalStorage(); // 👉 adiciona isso!
+
+            
+            // Fechar modal
+            transactionModal.style.display = 'none';
+        });
+        
+        // Enviar formulário de categoria
+        document.getElementById('category-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('category-name').value;
+            const icon = document.getElementById('category-icon').value;
+            const budget = parseFloat(document.getElementById('category-budget').value);
+            
+            // Adicionar nova categoria
+            const newCategory = {
+                id: categories.length + 1,
+                name,
+                icon,
+                budget,
+                spent: 0,
+                remaining: budget
+            };
+            
+            categories.push(newCategory);
+            
+            // Atualizar dados
+            loadCategories();
+            
+            // Limpar formulário
+            this.reset();
+            
+            // Atualizar a tabela de categorias
+            const categoriesTable = document.getElementById('categories-table');
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+                <td>${newCategory.icon}</td>
+                <td>${newCategory.name}</td>
+                <td>R$ ${newCategory.budget.toFixed(2)}</td>
+                <td>
+                    <button onclick="editCategory(${newCategory.id})" style="background-color: #3b82f6; padding: 5px 8px;">Editar</button>
+                    <button onclick="deleteCategory(${newCategory.id})" style="background-color: #ef4444; padding: 5px 8px;">Excluir</button>
+                </td>
+            `;
+            
+            categoriesTable.appendChild(row);
+        });
+        
+        // Processar arquivo CSV
+        document.getElementById('process-csv').addEventListener('click', function() {
+            const fileInput = document.getElementById('csv-file');
+            
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                
+                // Aqui você implementaria a lógica para processar o arquivo CSV
+                // Para demonstração, apenas fechamos o modal
+                csvModal.style.display = 'none';
+                alert('Arquivo CSV processado com sucesso!');
+            } else {
+                alert('Por favor, selecione um arquivo CSV');
+            }
+        });
+        
+        // Função para atualizar os gastos por categoria
+        function updateCategorySpending() {
+            // Resetar os gastos
+            categories.forEach(category => {
+                category.spent = 0;
+                category.remaining = category.budget;
+            });
+            
+            // Calcular os gastos para cada categoria
+            transactions.forEach(transaction => {
+                if (transaction.amount < 0 && transaction.category > 0) {
+                    const category = categories.find(c => c.id === transaction.category);
+                    if (category) {
+                        category.spent += Math.abs(transaction.amount);
+                        category.remaining = category.budget - category.spent;
+                    }
+                }
+            });
+        }
+        
+        // Funções para editar e excluir transações
+        window.editTransaction = function(id) {
+            const transaction = transactions.find(t => t.id === id);
+            if (transaction) {
+                // Abrir o modal de transação
+                const categorySelect = document.getElementById('transaction-category');
+                categorySelect.innerHTML = '<option value="0">Receita 💰</option>';
+                
+                categories.forEach(category => {
+                    categorySelect.innerHTML += `<option value="${category.id}">${category.icon} ${category.name}</option>`;
+                });
+                
+                // Preencher o formulário com os dados da transação
+                document.getElementById('transaction-date').value = transaction.date;
+                document.getElementById('transaction-description').value = transaction.description;
+                document.getElementById('transaction-category').value = transaction.category;
+                document.getElementById('transaction-amount').value = Math.abs(transaction.amount);
+                
+                // Alterar o botão de "Adicionar" para "Atualizar"
+                const form = document.getElementById('transaction-form');
+                form.onsubmit = function(e) {
+                    e.preventDefault();
+                    
+                    // Atualizar a transação
+                    transaction.date = document.getElementById('transaction-date').value;
+                    transaction.description = document.getElementById('transaction-description').value;
+                    transaction.category = parseInt(document.getElementById('transaction-category').value);
+                    
+                    let amount = parseFloat(document.getElementById('transaction-amount').value);
+                    if (transaction.category !== 0 && amount > 0) {
+                        amount = -amount;
+                    }
+                    transaction.amount = amount;
+                    
+                    // Atualizar dados
+                    updateCategorySpending();
+                    loadTransactions();
+                    loadCategories();
+                    updateBalance();
+                    
+                    // Fechar modal
+                    transactionModal.style.display = 'none';
+                    
+                    // Restaurar o comportamento padrão do formulário
+                    form.onsubmit = null;
+                };
+                
+                transactionModal.style.display = 'block';
+            }
+        };
+        
+        window.deleteTransaction = function(id) {
+            if (confirm("Tem certeza que deseja excluir esta transação?")) {
+                transactions = transactions.filter(t => t.id !== id);
+                updateCategorySpending();
+                loadTransactions();
+                loadCategories();
+                updateBalance();
+            }
+        };
+
+        // 🚀 Tentar carregar dados salvos do localStorage
+const savedData = localStorage.getItem('minhasFinancasData');
+if (savedData) {
+    try {
+        const parsed = JSON.parse(savedData);
+        transactions = parsed.transactions || [];
+        categories = parsed.categories || [];
+    } catch (err) {
+        console.error('Erro ao carregar dados salvos:', err);
+    }
+}
+
+// Inicializar a aplicação com os dados (novos ou salvos)
+updateCurrentMonth();
+updateCategorySpending();
+loadCategories();
+loadTransactions();
+updateBalance();
+
+        // 👉 Botão Exportar Dados (.json)
+document.getElementById('export-data-btn').addEventListener('click', function () {
+    const data = {
+        transactions,
+        categories
+    };
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'minhas-financas-backup.json';
+    link.click();
+
+    URL.revokeObjectURL(url);
+});
+
+// 👉 Botão Importar Dados (.json)
+document.getElementById('import-data-btn').addEventListener('click', function () {
+    document.getElementById('import-data-input').click();
+});
+
+document.getElementById('import-data-input').addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        try {
+            const imported = JSON.parse(e.target.result);
+            transactions = imported.transactions || [];
+            categories = imported.categories || [];
+
+            updateCategorySpending();
+            loadCategories();
+            loadTransactions();
+            updateBalance();
+
+            alert('Dados importados com sucesso!');
+        } catch (err) {
+            alert('Erro ao importar o arquivo. Verifique se o formato está correto.');
+        }
+    };
+    reader.readAsText(file);
+});
+// ⚠️ Avisar antes de fechar a página
+window.addEventListener('beforeunload', function (e) {
+    e.preventDefault();
+    e.returnValue = 'Deseja salvar seus dados antes de sair? Clique em "Exportar Dados" para não perder!';
+});
+
+// 💾 Salvar no localStorage
+function saveToLocalStorage() {
+    const data = {
+        transactions,
+        categories
+    };
+    localStorage.setItem('minhasFinancasData', JSON.stringify(data));
+}
+    </script>
+</body>
+</html>
+
+
+        body {
+            padding: 0 1rem;
+        }
